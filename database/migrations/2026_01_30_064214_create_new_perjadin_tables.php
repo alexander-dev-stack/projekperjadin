@@ -1,0 +1,46 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('employees', function (Blueprint $table) {
+            $table->id();
+            $table->string('nip')->unique()->nullable();
+            $table->string('nama');
+            $table->string('jabatan')->nullable();
+            $table->string('unit_kerja')->nullable();
+            $table->string('avatar')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('trips', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('employee_id')->constrained('employees')->onDelete('cascade');
+            $table->date('tanggal_mulai');
+            $table->date('tanggal_selesai');
+            $table->integer('durasi');
+            $table->string('tujuan');
+            $table->string('notadinas');
+            $table->enum('jenis', ['DN', 'DK', 'DLN'])->default('DN');
+            $table->enum('status', ['planned', 'ongoing', 'completed', 'cancelled'])->default('completed');
+            $table->text('keterangan')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('new_perjadin_tables');
+    }
+};
